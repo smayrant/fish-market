@@ -15,10 +15,24 @@ class App extends React.Component {
   // once mounted, firebase is loaded and data is synced
   componentDidMount() {
     const { params } = this.props.match;
+    // reinstate localStorage
+    const localStorageRef = localStorage.getItem(params.storeId);
+    if (localStorageRef) {
+      this.setState({ order: JSON.parse(localStorageRef) });
+    }
     this.ref = base.syncState(`${params.storeId}/fishes`, {
       context: this,
       state: "fishes"
     });
+  }
+
+  componentDidUpdate() {
+    console.log(this.state.order);
+    // the store name is stored as the key and the state of the order is stored as value
+    localStorage.setItem(
+      this.props.match.params.storeId,
+      JSON.stringify(this.state.order)
+    );
   }
 
   // ensures firebase is no longer listening for changes once the component is unmounted

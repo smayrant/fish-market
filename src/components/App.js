@@ -64,6 +64,17 @@ class App extends React.Component {
     this.setState({ fishes });
   };
 
+  deleteFish = key => {
+    // obtain copy of state
+    const fishes = { ...this.state.fishes };
+
+    // update the state by setting the fish to null (null is utilized to ensure Firebase also removes the fish)
+    fishes[key] = null;
+
+    // update state
+    this.setState({ fishes });
+  };
+
   // method to display the sample set of fish to the screen
   loadSampleFishes = () => {
     this.setState({
@@ -81,6 +92,16 @@ class App extends React.Component {
       order
     });
   };
+
+  removeFromOrder = key => {
+    // retrieve copy of state
+    const order = { ...this.state.order };
+    // remove item from order
+    delete order[key];
+    // update the state
+    this.setState({ order });
+  };
+
   render() {
     return (
       <div className="catch-of-the-day">
@@ -97,12 +118,17 @@ class App extends React.Component {
             ))}
           </ul>
         </div>
-        <Order fishes={this.state.fishes} order={this.state.order} />
+        <Order
+          fishes={this.state.fishes}
+          order={this.state.order}
+          removeFromOrder={this.removeFromOrder}
+        />
         <Inventory
           updateFish={this.updateFish}
           addFish={this.addFish}
           loadSampleFishes={this.loadSampleFishes}
           fishes={this.state.fishes}
+          deleteFish={this.deleteFish}
         />
       </div>
     );
